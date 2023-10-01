@@ -36,3 +36,24 @@ textarea {
 .sidebar h2 {
     margin-top: 5px;
 }
+
+.NewPage {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin: 20px;
+}
+
+.addMarkdown {
+    width: 70%;
+    height: 300px;
+}
+
+.titleInput {
+    width: 300px;
+}
+
+.subButton {
+    width: 300px;
+}

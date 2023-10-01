@@ -22,19 +22,44 @@ def entry(request, title):
     else:
         return render(request, f"encyclopedia/entry.html", {
                 "title": "error",
-                "HTML_code":  "<h2> entry not found </h2>"
+                "HTML_code":  "<h2>error: entry not found </h2>"
             })
 
+def newPage(request):
+    markdowner = Markdown()
+    if request.method == "POST":
+        titleInput = request.POST['titleInput']
+        textInput = request.POST['textInput']
+        if util.get_entry(titleInput) != None:
+            return render(request, f"encyclopedia/entry.html", {
+                "title": "error",
+                "HTML_code":  "<h2>error: this title already exist </h2>"
+            })
+        else:
+            util.save_entry(titleInput, textInput)
+            return render(request, f"encyclopedia/entry.html", {
+                "title": titleInput,
+                "HTML_code": markdowner.convert(textInput)
+            })
+    else:
+        return render(request, "encyclopedia/newPage.html", {
+            })
+    
 
-def search(request):
+
+
+def search(request):  
     markdowner = Markdown()
     superstring_list = []
     nbResult = 0
 
-    if request.method == "POST":
-        search_request = request.POST['q']
+    #tp make the search case insensitiv
+    entry_upper = [x.upper() for x in util.list_entries()] 
 
-        if search_request in util.list_entries():
+    if request.method == "POST":
+        search_request = request.POST['q'].upper()
+
+        if search_request in entry_upper:
             return render(request, "encyclopedia/entry.html", {
                 "title": search_request,
                 "HTML_code":  markdowner.convert(util.get_entry(search_request))
