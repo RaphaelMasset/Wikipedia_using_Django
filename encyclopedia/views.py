@@ -1,63 +1,53 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
+from markdown2 import Markdown
 
 from . import util
-
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
+def entry(request, title):
+    markdowner = Markdown()
 
-def search(request, searchQuery=None):
-    # Check if a valid search query is provided in the URL.
-    if searchQuery:
-        # Define a list of valid topic names (e.g., "CPP," "CSS," "Django," etc.).
-        valid_topics = util.list_entries()
+    if title in util.list_entries():
+        return render(request, f"encyclopedia/entry.html", {
+            "title": title,
+            "HTML_code":  markdowner.convert(util.get_entry(title))
+        })
 
-        # Check if the provided searchQuery matches a valid topic name.
-        if searchQuery in valid_topics:
-            # If it matches, render the corresponding HTML page.
-            return render(request, f"{searchQuery}.html", {
-                f"{searchQuery}_text":  util.get_entry(searchQuery) 
+    else:
+        return render(request, f"encyclopedia/entry.html", {
+                "title": "error",
+                "HTML_code":  "<h2> entry not found </h2>"
             })
 
-    # If no valid query or matching topic is found, raise a 404 error.
-    raise Http404("Page not found")
 
+def search(request):
+    markdowner = Markdown()
+    superstring_list = []
+    nbResult = 0
 
+    if request.method == "POST":
+        search_request = request.POST['q']
 
+        if search_request in util.list_entries():
+            return render(request, "encyclopedia/entry.html", {
+                "title": search_request,
+                "HTML_code":  markdowner.convert(util.get_entry(search_request))
+            })
+        
+        else:
+            for entry in util.list_entries():
+                if search_request in entry:
+                    superstring_list.append(entry)
+                    nbResult +=1
 
-def CPP(request):  
-    return render(request, "encyclopedia/CPP.html", {
-        "CPP_text":  util.get_entry("CPP") 
-    })
-
-def CSS(request):   
-    return render(request, "encyclopedia/CSS.html", {
-        "CSS_text":  util.get_entry("CSS") 
-    })
-
-def HTML(request):   
-    return render(request, "encyclopedia/HTML.html", {
-        "HTML_text":  util.get_entry("HTML") 
-    })
-
-def Python(request):   
-    return render(request, "encyclopedia/Python.html", {
-        "Python_text":  util.get_entry("Python") 
-    })
-
-def Django(request):   
-    return render(request, "encyclopedia/Django.html", {
-        "Django_text":  util.get_entry("Django") 
-    })
-
-def Git(request):   
-    return render(request, "encyclopedia/Git.html", {
-        "Git_text":  util.get_entry("Git") 
-    })
-
+            return render(request, "encyclopedia/searchResult.html", {
+                "entries": superstring_list,
+                "nbResult": nbResult
+            })
 
