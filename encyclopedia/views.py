@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from markdown2 import Markdown
+import random
 
 from . import util
 
@@ -76,3 +77,10 @@ def search(request):
                 "nbResult": nbResult
             })
 
+def randm(request): 
+    markdowner = Markdown()
+    title = random.choice(util.list_entries())
+    return render(request, f"encyclopedia/randm.html", {
+        "title": title,
+        "HTML_code":  markdowner.convert(util.get_entry(title))
+    })
