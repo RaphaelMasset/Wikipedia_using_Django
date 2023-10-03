@@ -7,11 +7,15 @@
 
 {% block body %}
 
-    
+    {%if title != 'error'%}
     <img src="{% static 'encyclopedia/'%}{{title}}{{'logo.png'}}" style="height: 100px;">
+    {% endif %} 
 
     
     <p>{{ HTML_code | safe }}</p>
 
+    {%if title != 'error'%}
+    <input type="button" value="Edit" onclick="window.location.href='{% url 'edit' title=title %}'">
+    {% endif %} 
 
 {% endblock %}

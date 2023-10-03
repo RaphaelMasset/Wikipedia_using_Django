@@ -24,6 +24,17 @@ def save_entry(title, content):
         default_storage.delete(filename)
     default_storage.save(filename, ContentFile(content))
 
+def delate_entry(title):
+    """
+    Delate an encyclopedia entry, given its title
+    content. If an existing entry with the same title already exists,
+    it is delated.
+    """
+    filename = f"entries/{title}.md"
+    if default_storage.exists(filename):
+        default_storage.delete(filename)
+
+
 
 def get_entry(title):
     """

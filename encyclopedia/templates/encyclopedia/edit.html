@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+{% load static %}
+
+{% block title %}
+    <div>Edit: {{title}}</div>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Edit: {{title}}</h1>
+    <form class="NewPage" action="{% url 'save' %}" method="POST">  
+        {% csrf_token %}
+        <input class="titleInput" type="text" name="newTitleInput" placeholder="{{title}}" value="{{title}}">
+        <label for="markdownInput">markdown content :</label>
+        <textarea class="addMarkdown" type="text" name="newTextInput"  row="4" col="50" value="markdownInput">{{Markdown_code}}</textarea>
+        <input class="subButton" type="submit" value="Save">
+    </form>
+    
+    <p>{{ HTML_code | safe }}</p>
+  
+
+
+{% endblock %}

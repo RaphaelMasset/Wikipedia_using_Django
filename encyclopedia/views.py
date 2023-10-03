@@ -84,3 +84,27 @@ def randm(request):
         "title": title,
         "HTML_code":  markdowner.convert(util.get_entry(title))
     })
+
+
+def edit(request, title):
+    return render(request, "encyclopedia/edit.html", {
+        "title": title,
+        "Markdown_code":  util.get_entry(title)
+        
+    })
+
+def save(request):
+    markdowner = Markdown()
+    if request.method == "POST":
+        newTitleInput = request.POST['newTitleInput']
+        newTextInput = request.POST['newTextInput']
+
+        util.delate_entry(newTitleInput)
+        util.save_entry(newTitleInput, newTextInput)
+
+        return render(request, "encyclopedia/entry.html", {
+            "title": newTitleInput,
+            "HTML_code":  markdowner.convert(util.get_entry(newTitleInput))
+            
+        })
+
