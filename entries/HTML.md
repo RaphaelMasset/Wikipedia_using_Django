@@ -1,6 +1,6 @@
 # HTML
 
-HTML is a markup language that can be used to define the structure of a web page. HTML elements include
+The HyperText Markup Language or HTML is the standard markup language for documents designed to be displayed in a web browser. It defines the meaning and structure of web content. It is often assisted by technologies such as Cascading Style Sheets [CSS](/CSS) and scripting languages such as JavaScript. HTML elements include:
 
 * headings
 * paragraphs
